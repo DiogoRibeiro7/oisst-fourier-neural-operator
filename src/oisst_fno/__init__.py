@@ -4,6 +4,7 @@ from .data import (
     DownloadError,
     ForecastSpec,
     Region,
+    SSTSequenceDataset,
     SSTWindowDataset,
     Standardizer,
 )
@@ -16,6 +17,7 @@ from .experiment import (
     set_global_seed,
 )
 from .model import FNO2d, TruncatedFourierMix2d
+from .model3d import FNO3d, TruncatedFourierMix3d
 from .multivariate import (
     AblationSpec,
     MultivariateWindowDataset,
@@ -34,15 +36,18 @@ __all__ = [
     "EpochRecord",
     "ExperimentConfig",
     "FNO2d",
+    "FNO3d",
     "ForecastSpec",
     "MultivariateWindowDataset",
     "PerVariableStandardizer",
     "ProvenanceError",
     "Region",
+    "SSTSequenceDataset",
     "SSTWindowDataset",
     "Standardizer",
     "TrainingHistory",
     "TruncatedFourierMix2d",
+    "TruncatedFourierMix3d",
     "VariableSpec",
     "ValidationReport",
     "collect_environment",

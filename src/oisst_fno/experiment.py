@@ -14,6 +14,8 @@ import json
 import platform
 import random
 import subprocess
+import time
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from importlib import metadata
@@ -376,6 +378,118 @@ def gradient_norm(parameters: Any) -> float:
             continue
         total += float(parameter.grad.detach().norm(2).item() ** 2)
     return float(total**0.5)
+
+
+@dataclass(frozen=True, slots=True)
+class BudgetMatch:
+    """Result of matching one architecture's parameter count to another's."""
+
+    width: int
+    parameters: int
+    target: int
+
+    @property
+    def relative_error(self) -> float:
+        """Signed fractional difference from the target parameter count."""
+        return (self.parameters - self.target) / self.target
+
+
+def width_for_parameter_budget(
+    factory: Callable[[int], torch.nn.Module],
+    target_parameters: int,
+    *,
+    min_width: int = 2,
+    max_width: int = 512,
+) -> BudgetMatch:
+    """Find the width whose parameter count sits closest to ``target_parameters``.
+
+    Comparing two architectures is only informative if capacity is held roughly fixed;
+    otherwise "the elaborate model won" and "the bigger model won" are indistinguishable.
+    Parameter count rises monotonically with width, so a scan over the range is enough and
+    is more robust than solving the scaling relation analytically.
+
+    The achieved count will rarely be exact. ``BudgetMatch.relative_error`` reports the
+    residual mismatch so it can be stated rather than glossed over.
+    """
+    if target_parameters < 1:
+        raise ValueError("target_parameters must be positive.")
+    if min_width < 1 or max_width < min_width:
+        raise ValueError("Invalid width range.")
+
+    best: BudgetMatch | None = None
+    for width in range(min_width, max_width + 1):
+        count = sum(p.numel() for p in factory(width).parameters() if p.requires_grad)
+        candidate = BudgetMatch(width=width, parameters=count, target=target_parameters)
+        if best is None or abs(candidate.relative_error) < abs(best.relative_error):
+            best = candidate
+        if count > target_parameters:
+            break
+
+    assert best is not None
+    return best
+
+
+@dataclass(frozen=True, slots=True)
+class CostMeasurement:
+    """Wall-clock and memory cost of a forward or forward-backward pass."""
+
+    seconds_per_pass: float
+    peak_gpu_mb: float | None
+    parameters: int
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-serializable representation."""
+        return asdict(self)
+
+
+def measure_cost(
+    model: torch.nn.Module,
+    sample: torch.Tensor,
+    *,
+    repeats: int = 5,
+    warmup: int = 1,
+    backward: bool = False,
+) -> CostMeasurement:
+    """Time a model on one sample and record peak GPU memory.
+
+    A structurally richer operator can win on error and still be the wrong choice if it
+    costs several times more per forecast, so cost is measured rather than assumed.
+    Warm-up passes are excluded because the first call pays lazy-initialisation and, on
+    CUDA, kernel autotuning.
+    """
+    if repeats < 1:
+        raise ValueError("repeats must be positive.")
+
+    device = sample.device
+    on_cuda = device.type == "cuda"
+    if on_cuda:
+        torch.cuda.reset_peak_memory_stats()
+
+    def one_pass() -> None:
+        if backward:
+            model.zero_grad(set_to_none=True)
+            model(sample).square().mean().backward()
+        else:
+            with torch.no_grad():
+                model(sample)
+
+    for _ in range(warmup):
+        one_pass()
+    if on_cuda:
+        torch.cuda.synchronize()
+
+    started = time.perf_counter()
+    for _ in range(repeats):
+        one_pass()
+    if on_cuda:
+        torch.cuda.synchronize()
+    elapsed = time.perf_counter() - started
+
+    return CostMeasurement(
+        seconds_per_pass=elapsed / repeats,
+        peak_gpu_mb=(torch.cuda.max_memory_allocated() / 1024**2) if on_cuda else None,
+        parameters=sum(p.numel() for p in model.parameters() if p.requires_grad),
+    )
 
 
 def amp_is_supported(device: torch.device) -> bool:

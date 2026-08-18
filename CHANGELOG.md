@@ -13,6 +13,19 @@ figure, or conclusion says so explicitly under "Results".
 
 ### Added
 
+- Spatiotemporal operator comparison (prompt `04`): `oisst_fno.model3d` adds
+  `TruncatedFourierMix3d`, `OperatorBlock3d`, and `FNO3d`, which transform time as an
+  explicit dimension instead of stacking it into channels. `FNO2d` is unchanged and
+  remains the baseline.
+- `SSTSequenceDataset` yields a target *trajectory* rather than a single field, so both
+  architectures train on identical windows and several lead times come from one forecast.
+- `temporal_increment_correlation` and `temporal_variability_ratio` measure whether a
+  forecast moves like the truth, which pointwise error cannot see.
+- `width_for_parameter_budget` and `measure_cost` support matched-capacity comparison and
+  record what the extra structure costs in time and memory.
+- Notebook `14` derives what changes when time is transformed rather than stacked, and
+  measures capacity and cost at the study resolution.
+
 - Multivariate forcing extension (prompt `03`): `oisst_fno.multivariate` adds variable
   specifications for ERA5 winds, air temperature, pressure and heat fluxes plus OISST's
   own `err`/`ice`/`anom`; an offline ERA5 CDS request builder; hourly-to-daily reduction

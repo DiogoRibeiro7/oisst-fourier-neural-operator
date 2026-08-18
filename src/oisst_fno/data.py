@@ -363,6 +363,61 @@ def temporal_split(
     return train, validation, test
 
 
+class SSTSequenceDataset(Dataset[tuple[Tensor, Tensor, Tensor]]):
+    """Temporal windows whose target is a *sequence* of future fields.
+
+    The single-field :class:`SSTWindowDataset` answers "what is the field at one lead
+    time". This answers "what is the trajectory", which is what a spatiotemporal operator
+    predicts and what makes temporal coherence measurable at all.
+
+    Inputs keep the ``[time, height, width]`` layout so a 3-D model can consume time as a
+    dimension; a channel-stacked 2-D model reads the same tensor with time as channels, so
+    both architectures train on identical windows and identical targets.
+    """
+
+    def __init__(
+        self,
+        values: np.ndarray,
+        lookback_days: int,
+        horizon_days: int,
+    ) -> None:
+        array = np.asarray(values, dtype=np.float32)
+        if array.ndim != 3:
+            raise ValueError("values must have shape [time, height, width].")
+        if lookback_days < 1 or horizon_days < 1:
+            raise ValueError("lookback_days and horizon_days must be positive.")
+        minimum = lookback_days + horizon_days
+        if array.shape[0] < minimum:
+            raise ValueError(f"Need at least {minimum} time steps, got {array.shape[0]}.")
+
+        self._lookback = lookback_days
+        self._horizon = horizon_days
+        self._mask: FloatArray = np.asarray(np.isfinite(array).any(axis=0), dtype=np.float32)
+        self._filled: FloatArray = np.asarray(
+            np.nan_to_num(array, nan=0.0, copy=True), dtype=np.float32
+        )
+        self._steps = int(array.shape[0])
+
+    def __len__(self) -> int:
+        return self._steps - self._lookback - self._horizon + 1
+
+    def __getitem__(self, index: int) -> tuple[Tensor, Tensor, Tensor]:
+        if index < 0 or index >= len(self):
+            raise IndexError(index)
+        start = index
+        stop = start + self._lookback
+        target_stop = stop + self._horizon
+
+        x = torch.from_numpy(self._filled[start:stop].copy())
+        y = torch.from_numpy(self._filled[stop:target_stop].copy())
+        mask = torch.from_numpy(self._mask[None, ...].copy())
+        return x, y, mask
+
+    def target_offsets(self) -> np.ndarray:
+        """Lead times, in days, of each element of the target sequence."""
+        return np.arange(1, self._horizon + 1, dtype=int)
+
+
 class SSTWindowDataset(Dataset[tuple[Tensor, Tensor, Tensor]]):
     """Lazy temporal windows over a standardized SST array.
 

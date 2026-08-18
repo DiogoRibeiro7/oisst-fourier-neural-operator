@@ -122,6 +122,7 @@ A research-grade extension should also add ConvLSTM/U-Net-style baselines and th
 | `11_conclusions_model_card.ipynb` | State only conclusions supported by stored evidence and document threats to validity. |
 | `12_multivariate_audit.ipynb` | Audit candidate exogenous variables: resolution, units, grid orientation, missingness, provenance, licensing. |
 | `13_multivariate_experiment.ipynb` | Compare SST-only against multivariate arms on identical targets under a matched budget. |
+| `14_spatiotemporal_fno.ipynb` | Compare the channel-stacked 2-D FNO against a space-time 3-D operator at matched capacity. |
 
 ## Scientific success criteria
 
@@ -153,7 +154,7 @@ poetry run jupyter lab
 
 Run notebooks in numeric order. Notebooks `00`–`11` are the core SST-only study;
 `12`–`13` are a multivariate extension that asks a separate question and is documented in
-[`docs/MULTIVARIATE.md`](docs/MULTIVARIATE.md).
+[`docs/MULTIVARIATE.md`](docs/MULTIVARIATE.md); `14` compares architectures.
 
 Contributors should also install the git hooks, which strip notebook outputs and run
 ruff and mypy before each commit:
@@ -181,7 +182,7 @@ This is intentionally not a large application framework. The scientific narrativ
 - experiment configuration, environment capture, and training history;
 - exogenous-forcing alignment, per-variable normalization, and ablation specifications;
 - strong reusable baselines;
-- the FNO implementation;
+- the FNO implementation, and a spatiotemporal variant for architecture comparison;
 - forecast and scale-aware metrics.
 
 ## Implementation provenance

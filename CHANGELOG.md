@@ -13,6 +13,16 @@ figure, or conclusion says so explicitly under "Results".
 
 ### Added
 
+- Multivariate forcing extension (prompt `03`): `oisst_fno.multivariate` adds variable
+  specifications for ERA5 winds, air temperature, pressure and heat fluxes plus OISST's
+  own `err`/`ice`/`anom`; an offline ERA5 CDS request builder; hourly-to-daily reduction
+  aligned to the OISST analysis timestamp; regridding onto the OISST grid; per-variable
+  training-only normalization; a `MultivariateWindowDataset` that takes forcing at the
+  last observed day; and the prespecified ablation arms.
+- Notebooks `12` (source audit) and `13` (comparison and ablations), plus
+  `docs/MULTIVARIATE.md` covering ERA5 licensing, every alignment decision, and the
+  interpretation limits.
+
 - Reproducible and auditable FNO training (prompt `02`): `oisst_fno.experiment` provides
   seeding across Python/NumPy/PyTorch with opt-in deterministic kernels, environment
   capture (package versions, git commit and dirty state, torch/CUDA/GPU), an
@@ -76,6 +86,9 @@ First public release.
 
 ### Changed
 
+- `PerVariableStandardizer` refuses a channel that is entirely missing over the study
+  region, with an explicit message. The Northeast Atlantic audit found `ice` is 100%
+  missing at 30-50N, which would otherwise have surfaced as a confusing failure later.
 - Notebook `07` saves only the best-validation checkpoint plus structured history and
   configuration, and plots learning curves alongside a gradient-norm trace with an
   explicit fit diagnosis. Notebook `06` seeds its probes, asserts CPU determinism, and

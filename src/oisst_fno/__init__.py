@@ -16,10 +16,18 @@ from .experiment import (
     set_global_seed,
 )
 from .model import FNO2d, TruncatedFourierMix2d
+from .multivariate import (
+    AblationSpec,
+    MultivariateWindowDataset,
+    PerVariableStandardizer,
+    VariableSpec,
+    standard_ablations,
+)
 from .provenance import DownloadManifest, ProvenanceError
 from .validation import DataValidationError, ValidationReport
 
 __all__ = [
+    "AblationSpec",
     "DataValidationError",
     "DownloadError",
     "DownloadManifest",
@@ -27,14 +35,18 @@ __all__ = [
     "ExperimentConfig",
     "FNO2d",
     "ForecastSpec",
+    "MultivariateWindowDataset",
+    "PerVariableStandardizer",
     "ProvenanceError",
     "Region",
     "SSTWindowDataset",
     "Standardizer",
     "TrainingHistory",
     "TruncatedFourierMix2d",
+    "VariableSpec",
     "ValidationReport",
     "collect_environment",
     "diagnose_learning_curves",
     "set_global_seed",
+    "standard_ablations",
 ]

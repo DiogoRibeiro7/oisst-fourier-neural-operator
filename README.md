@@ -120,6 +120,8 @@ A research-grade extension should also add ConvLSTM/U-Net-style baselines and th
 | `09_spectral_skill_attribution.ipynb` | Attribute skill by spatial-frequency band, season, and validation-defined forecast-difficulty regime. |
 | `10_robustness_ablation.ipynb` | Modes, width, lookback, horizon, resolution, seed, and regime sensitivity. |
 | `11_conclusions_model_card.ipynb` | State only conclusions supported by stored evidence and document threats to validity. |
+| `12_multivariate_audit.ipynb` | Audit candidate exogenous variables: resolution, units, grid orientation, missingness, provenance, licensing. |
+| `13_multivariate_experiment.ipynb` | Compare SST-only against multivariate arms on identical targets under a matched budget. |
 
 ## Scientific success criteria
 
@@ -149,7 +151,9 @@ poetry run python -m ipykernel install --user --name oisst-fno --display-name "O
 poetry run jupyter lab
 ```
 
-Run notebooks in numeric order.
+Run notebooks in numeric order. Notebooks `00`–`11` are the core SST-only study;
+`12`–`13` are a multivariate extension that asks a separate question and is documented in
+[`docs/MULTIVARIATE.md`](docs/MULTIVARIATE.md).
 
 Contributors should also install the git hooks, which strip notebook outputs and run
 ruff and mypy before each commit:
@@ -175,6 +179,7 @@ This is intentionally not a large application framework. The scientific narrativ
 - data acquisition and temporal-window utilities;
 - download provenance manifests and structural dataset validation;
 - experiment configuration, environment capture, and training history;
+- exogenous-forcing alignment, per-variable normalization, and ablation specifications;
 - strong reusable baselines;
 - the FNO implementation;
 - forecast and scale-aware metrics.

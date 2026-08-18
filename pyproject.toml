@@ -59,6 +59,7 @@ jupyterlab = ">=4.2"
 ipykernel = ">=6.29"
 nbformat = ">=5.10"
 types-requests = ">=2.32"
+pandas-stubs = ">=2.2"
 
 [build-system]
 requires = ["poetry-core>=2.0.0"]
@@ -72,7 +73,7 @@ target-version = "py311"
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 warn_unused_ignores = true
 exclude = ["notebooks/"]

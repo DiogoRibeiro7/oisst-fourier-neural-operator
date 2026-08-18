@@ -54,12 +54,17 @@ in the web form.
 
 ## Version bump checklist
 
-Update all four in the same commit, then tag:
+Update these in the same commit, then tag:
 
 - `pyproject.toml` → `version`
 - `.zenodo.json` → `version`
 - `CITATION.cff` → `version` and `date-released`
+- `CHANGELOG.md` → move `Unreleased` entries under the new version, with a **Results**
+  note saying whether any reported metric, figure, or conclusion changed
 - `README.md` → DOI badge, if pinned to a version DOI rather than the concept DOI
+
+The `citation metadata` CI job fails the build if `pyproject.toml`, `.zenodo.json`, and
+`CITATION.cff` disagree on the version, so a partial bump cannot reach `main`.
 
 ## What the archive does and does not contain
 

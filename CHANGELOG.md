@@ -13,6 +13,20 @@ figure, or conclusion says so explicitly under "Results".
 
 ### Added
 
+- Hardened OISST acquisition (prompt `01`): bounded retries with exponential backoff on
+  transient failures, atomic writes so a partial download is never mistaken for complete
+  data, `Content-Length` and NetCDF-payload verification, and an optional smoke-test mode.
+- `oisst_fno.provenance`: a sidecar manifest recording source URL, timestamp, requested
+  dates, bounds, variables, file size, SHA-256, and the dataset DOI. `open_oisst` verifies
+  it before opening.
+- `oisst_fno.validation`: structural checks for coordinates, 0.25-degree spacing, daily
+  continuity, duplicated timestamps, value range, and land-mask stability, reported as a
+  list of issues rather than silently repaired.
+- Dataset constants verified against the live NCEI ERDDAP metadata (product version
+  `v02r01`, Celsius units, valid range, grid spacing).
+- 38 offline tests covering the download, provenance, and validation paths, with the
+  network mocked.
+
 - DOI badge and citation snippet in the README, and the concept and version DOIs
   recorded in `CITATION.cff` and `docs/ZENODO_RELEASE.md`, following the Zenodo deposit
   of v0.1.0.
@@ -50,6 +64,10 @@ First public release.
 
 ### Fixed
 
+- `open_oisst` reordered longitudes on a lazily loaded array, which indexed the wrong
+  axis after the singleton `depth` squeeze and raised `IndexError` on xarray's scipy
+  backend. Reordering now happens only for regions that actually need it, on
+  materialised values.
 - Ruff and strict-mypy errors that prevented CI from passing. Types are pinned at the
   numpy and torch stub boundary rather than suppressed.
 - `pandas-stubs` added as a dev dependency, and mypy targets Python 3.12 semantics so

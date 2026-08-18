@@ -120,7 +120,7 @@ jobs:
           versions = {
               ".zenodo.json": zenodo["version"],
               "CITATION.cff": str(cff["version"]),
-              "pyproject.toml": pyproject["tool"]["poetry"]["version"],
+              "pyproject.toml": pyproject["project"]["version"],
           }
           if len(set(versions.values())) != 1:
               print("Version mismatch across citation metadata:")

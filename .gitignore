@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+
+# Local data and trained artifacts
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+artifacts/models/*
+artifacts/metrics/*
+artifacts/figures/*
+artifacts/predictions/*
+!artifacts/models/.gitkeep
+!artifacts/metrics/.gitkeep
+!artifacts/figures/.gitkeep
+!artifacts/predictions/.gitkeep

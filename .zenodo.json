@@ -1,0 +1,90 @@
+{
+  "upload_type": "software",
+  "title": "OISST Fourier Neural Operator: scale-resolved evaluation of FNO forecast skill against persistence",
+  "version": "0.1.0",
+  "language": "eng",
+  "access_right": "open",
+  "license": "mit",
+  "creators": [
+    {
+      "name": "Ribeiro, Diogo",
+      "affiliation": "ESMAD - Instituto Politécnico do Porto",
+      "orcid": "0009-0001-2022-7072"
+    }
+  ],
+  "description": "<p>A notebook-first data science project asking a deliberately narrow question: <em>when does a Fourier Neural Operator (FNO) provide forecast information beyond persistence for real sea-surface temperature fields, and at which spatial scales does that gain occur?</em></p><p>The study uses NOAA/NCEI Optimum Interpolation Sea Surface Temperature (OISST) v2.1 over the Northeast Atlantic (roughly 30-50&deg;N, 30-5&deg;W) and evaluates 7-day-ahead field forecasting from the previous 14 daily SST fields. Training covers 2020-2024, validation 2025, and testing a frozen later holdout period. Splits are strictly temporal and preprocessing is fit on training data only.</p><p>The FNO is benchmarked against a hierarchy of baselines rather than reported in isolation: train-only seasonal climatology, persistence (the primary null model), linear trend, a global low-rank EOF+ridge linear dynamics model, and a small local CNN. Evaluation reports masked RMSE, MAE, anomaly correlation, persistence skill, paired daily RMSE differences with block-bootstrap uncertainty, spatial error maps, and scale-resolved spectral error energy, so that aggregate gains cannot hide regional failures or high-frequency smoothing.</p><p>Scope and limitations are stated explicitly. The repository claims no novel neural-operator architecture and no first application of FNOs to ocean or Atlantic SST forecasting; the contribution is the diagnostic design that attributes skill by spatial frequency band, season, and validation-defined forecast-difficulty regime. Because OISST v2.1 is a bias-adjusted, optimally interpolated Level-4 analysis, forecasting OISST is not equivalent to forecasting unprocessed ocean observations, and part of its apparent spatial predictability may originate in the analysis pipeline. This is documented as a threat to validity, alongside the mask and taper caveats that constrain spectral interpretation. A negative result - no robust skill over persistence - is treated as a publishable outcome.</p><p>Contents: eleven sequenced Jupyter notebooks (problem framing, data acquisition via NOAA ERDDAP, audit and EDA, spectral analysis, leakage-safe supervised dataset construction, baselines, FNO architecture, training, frozen test evaluation, spectral skill attribution, robustness and ablation, conclusions and model card); a tested <code>oisst_fno</code> Python package with data, baseline, model, and metric utilities; and documentation covering research positioning, data card, provenance and provenance audit, threats to validity, and references.</p><p>Code is released under the MIT License. NOAA OISST data remain governed by their source terms and attribution requirements.</p>",
+  "keywords": [
+    "Fourier neural operator",
+    "neural operator",
+    "sea surface temperature",
+    "OISST",
+    "ocean forecasting",
+    "spectral analysis",
+    "scientific machine learning",
+    "deep learning",
+    "PyTorch",
+    "persistence baseline",
+    "forecast verification",
+    "reproducible research",
+    "geoscience"
+  ],
+  "notes": "Reproducing this study requires downloading NOAA OISST v2.1 through the NCEI ERDDAP service (dataset identifier ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon); raw data, trained model checkpoints, and generated figures are not included in the archive. The Fourier Neural Operator method is not original to this repository and follows Li et al. (ICLR 2021); see docs/PROVENANCE.md and docs/PROVENANCE_AUDIT.md for the implementation provenance audit.",
+  "related_identifiers": [
+    {
+      "relation": "isDerivedFrom",
+      "identifier": "10.25921/RE9P-PT57",
+      "scheme": "doi",
+      "resource_type": "dataset"
+    },
+    {
+      "relation": "references",
+      "identifier": "arXiv:2010.08895",
+      "scheme": "arxiv",
+      "resource_type": "publication-conferencepaper"
+    },
+    {
+      "relation": "references",
+      "identifier": "arXiv:2108.08481",
+      "scheme": "arxiv",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "relation": "references",
+      "identifier": "arXiv:2310.00813",
+      "scheme": "arxiv",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "relation": "references",
+      "identifier": "arXiv:2404.05768",
+      "scheme": "arxiv",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "relation": "references",
+      "identifier": "arXiv:2601.01813",
+      "scheme": "arxiv",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "relation": "references",
+      "identifier": "10.1029/2025JH001131",
+      "scheme": "doi",
+      "resource_type": "publication-article"
+    },
+    {
+      "relation": "isSupplementedBy",
+      "identifier": "https://github.com/neuraloperator/neuraloperator",
+      "scheme": "url",
+      "resource_type": "software"
+    }
+  ],
+  "references": [
+    "Li, Z., Kovachki, N., Azizzadenesheli, K., Liu, B., Bhattacharya, K., Stuart, A., & Anandkumar, A. (2021). Fourier Neural Operator for Parametric Partial Differential Equations. ICLR 2021. arXiv:2010.08895",
+    "Kovachki, N., Li, Z., Liu, B., Azizzadenesheli, K., Bhattacharya, K., Stuart, A., & Anandkumar, A. Neural Operator: Learning Maps Between Function Spaces. arXiv:2108.08481",
+    "Huang, B., Liu, C., Banzon, V., Freeman, E., Graham, G., Hankins, B., Smith, T., & Zhang, H.-M. Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version 2.1. Journal of Climate.",
+    "Banzon, V., Smith, T. M., Chin, T. M., Liu, C., & Hankins, W. (2016). A long-term record of blended satellite and in situ sea-surface temperature for climate monitoring, modeling and environmental studies. Earth System Science Data.",
+    "Chattopadhyay, A., Gray, M., Wu, T., Lowe, A. B., & He, R. OceanNet: A principled neural operator-based digital twin for regional oceans. arXiv:2310.00813",
+    "Jahanmard, V., et al. (2026). Principled Fourier Neural Operators for High-Resolution Regional Ocean Modeling. Journal of Geophysical Research: Machine Learning and Computation. doi:10.1029/2025JH001131"
+  ]
+}

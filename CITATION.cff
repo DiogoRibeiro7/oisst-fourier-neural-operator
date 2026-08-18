@@ -1,0 +1,104 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+title: "OISST Fourier Neural Operator: scale-resolved evaluation of FNO forecast skill against persistence"
+type: software
+version: 0.1.0
+date-released: 2026-08-18
+license: MIT
+authors:
+  - family-names: Ribeiro
+    given-names: Diogo
+    affiliation: "ESMAD - Instituto Politécnico do Porto"
+    orcid: "https://orcid.org/0009-0001-2022-7072"
+abstract: >-
+  A notebook-first data science project asking when a Fourier Neural Operator (FNO)
+  provides forecast information beyond persistence for real sea-surface temperature
+  fields, and at which spatial scales that gain occurs. The study uses NOAA/NCEI
+  Optimum Interpolation Sea Surface Temperature (OISST) v2.1 over the Northeast
+  Atlantic and evaluates 7-day-ahead field forecasting from the previous 14 daily SST
+  fields, with strictly temporal splits and preprocessing fit on training data only.
+  The FNO is benchmarked against seasonal climatology, persistence (the primary null
+  model), linear trend, an EOF+ridge global low-rank linear model, and a small local
+  CNN, using masked RMSE, MAE, anomaly correlation, persistence skill, paired daily
+  RMSE differences with block-bootstrap uncertainty, spatial error maps, and
+  scale-resolved spectral error energy. The repository claims no novel architecture and
+  no first application of FNOs to ocean or Atlantic SST forecasting; its contribution is
+  the diagnostic design that attributes skill by spatial-frequency band, season, and
+  forecast-difficulty regime, and it treats a negative result as a valid outcome.
+keywords:
+  - Fourier neural operator
+  - neural operator
+  - sea surface temperature
+  - OISST
+  - ocean forecasting
+  - spectral analysis
+  - scientific machine learning
+  - deep learning
+  - PyTorch
+  - persistence baseline
+  - forecast verification
+  - reproducible research
+references:
+  - type: conference-paper
+    title: "Fourier Neural Operator for Parametric Partial Differential Equations"
+    year: 2021
+    collection-title: "International Conference on Learning Representations (ICLR)"
+    url: "https://arxiv.org/abs/2010.08895"
+    authors:
+      - family-names: Li
+        given-names: Zongyi
+      - family-names: Kovachki
+        given-names: Nikola
+      - family-names: Azizzadenesheli
+        given-names: Kamyar
+      - family-names: Liu
+        given-names: Burigede
+      - family-names: Bhattacharya
+        given-names: Kaushik
+      - family-names: Stuart
+        given-names: Andrew
+      - family-names: Anandkumar
+        given-names: Anima
+  - type: article
+    title: "Neural Operator: Learning Maps Between Function Spaces"
+    url: "https://arxiv.org/abs/2108.08481"
+    authors:
+      - family-names: Kovachki
+        given-names: Nikola
+      - family-names: Li
+        given-names: Zongyi
+      - family-names: Liu
+        given-names: Burigede
+      - family-names: Azizzadenesheli
+        given-names: Kamyar
+      - family-names: Bhattacharya
+        given-names: Kaushik
+      - family-names: Stuart
+        given-names: Andrew
+      - family-names: Anandkumar
+        given-names: Anima
+  - type: data
+    title: "NOAA Optimum Interpolation Sea Surface Temperature (OISST) Version 2.1"
+    doi: "10.25921/RE9P-PT57"
+    authors:
+      - name: "NOAA National Centers for Environmental Information"
+  - type: article
+    title: "Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version 2.1"
+    journal: "Journal of Climate"
+    authors:
+      - family-names: Huang
+        given-names: Boyin
+      - family-names: Liu
+        given-names: Chunying
+      - family-names: Banzon
+        given-names: Viva
+      - family-names: Freeman
+        given-names: Eric
+      - family-names: Graham
+        given-names: Garrett
+      - family-names: Hankins
+        given-names: Bill
+      - family-names: Smith
+        given-names: Tom
+      - family-names: Zhang
+        given-names: Huai-Min

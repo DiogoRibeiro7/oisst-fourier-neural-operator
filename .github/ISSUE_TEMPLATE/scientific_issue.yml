@@ -1,0 +1,51 @@
+name: Scientific issue
+description: A methodological problem — leakage, an invalid baseline, or an unsupported claim
+labels: ["scientific-validity"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for problems with the *method* rather than the code: temporal leakage,
+        a baseline that is weaker than it should be, a statistical comparison that
+        ignores serial dependence, or a conclusion the stored evidence does not support.
+        These are treated as high priority.
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Temporal leakage or split contamination
+        - Baseline is mis-specified or unfairly weakened
+        - Invalid or overstated statistical comparison
+        - Conclusion not supported by stored evidence
+        - Spectral or masking diagnostic misinterpreted
+        - Data-card or provenance inaccuracy
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What is wrong, and why it invalidates or biases the result.
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Where
+      description: Notebook, module, or document, with a cell or line number.
+      placeholder: "notebooks/04_supervised_dataset.ipynb, cell 12"
+    validations:
+      required: true
+  - type: textarea
+    id: affected
+    attributes:
+      label: Which reported results are affected
+      description: Name the metrics, figures, or conclusions that change if you are right.
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Suggested correction

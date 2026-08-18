@@ -1,0 +1,31 @@
+name: Feature or extension
+description: Propose an extension to the study or the package
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Research motivation
+      description: >-
+        Which of the project's research questions does this sharpen? Extensions that
+        strengthen a baseline or a diagnostic are more welcome than ones that only add
+        model capacity.
+    validations:
+      required: true
+  - type: dropdown
+    id: placement
+    attributes:
+      label: Where would it live
+      options:
+        - A notebook (analysis or narrative)
+        - src/oisst_fno (reused across notebooks, unit-testable)
+        - Documentation only
+        - Not sure
+    validations:
+      required: true

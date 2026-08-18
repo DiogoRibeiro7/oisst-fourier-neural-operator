@@ -22,3 +22,11 @@ artifacts/predictions/*
 !artifacts/metrics/.gitkeep
 !artifacts/figures/.gitkeep
 !artifacts/predictions/.gitkeep
+
+# Build and packaging artifacts
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+.benchmarks/

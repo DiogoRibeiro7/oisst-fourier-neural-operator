@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: NOAA OISST data problems
+    url: https://www.ncei.noaa.gov/products/optimum-interpolation-sst
+    about: Questions about the OISST product or ERDDAP availability belong with NOAA NCEI.
+  - name: Fourier Neural Operator method
+    url: https://github.com/neuraloperator/neuraloperator
+    about: Questions about the FNO method or its reference implementation.

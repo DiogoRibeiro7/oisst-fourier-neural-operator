@@ -2,26 +2,131 @@ name: ci
 
 on:
   push:
+    branches: [main]
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   quality:
+    name: quality (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Poetry
+        run: pipx install poetry
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Poetry
-        run: pip install poetry
+          cache: poetry
+
       - name: Install dependencies
         run: poetry install --no-interaction
-      - name: Ruff
+
+      - name: Ruff lint
         run: poetry run ruff check src tests
+
+      - name: Ruff format
+        run: poetry run ruff format --check src tests
+
       - name: Mypy
         run: poetry run mypy src
+
       - name: Tests
         run: poetry run pytest
+
+  notebooks:
+    name: notebook hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install nbformat
+        run: pip install nbformat
+
+      - name: Notebooks are valid and contain no stored outputs
+        run: |
+          python - <<'PY'
+          import glob
+          import sys
+
+          import nbformat
+
+          failures = []
+          for path in sorted(glob.glob("notebooks/*.ipynb")):
+              nb = nbformat.read(path, as_version=4)
+              nbformat.validate(nb)
+              outputs = sum(
+                  len(cell.get("outputs", []))
+                  for cell in nb.cells
+                  if cell.cell_type == "code"
+              )
+              if outputs:
+                  failures.append(f"{path}: {outputs} stored outputs")
+
+          if failures:
+              print("Notebooks must be committed with outputs cleared:")
+              print("\n".join(f"  {line}" for line in failures))
+              sys.exit(1)
+
+          print("All notebooks valid with outputs cleared.")
+          PY
+
+  metadata:
+    name: citation metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validators
+        run: pip install cffconvert pyyaml
+
+      - name: Validate CITATION.cff
+        run: cffconvert --validate -i CITATION.cff
+
+      - name: Validate .zenodo.json and check version agreement
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          import tomllib
+
+          import yaml
+
+          zenodo = json.load(open(".zenodo.json", encoding="utf-8"))
+          cff = yaml.safe_load(open("CITATION.cff", encoding="utf-8"))
+          pyproject = tomllib.load(open("pyproject.toml", "rb"))
+
+          versions = {
+              ".zenodo.json": zenodo["version"],
+              "CITATION.cff": str(cff["version"]),
+              "pyproject.toml": pyproject["tool"]["poetry"]["version"],
+          }
+          if len(set(versions.values())) != 1:
+              print("Version mismatch across citation metadata:")
+              for name, value in versions.items():
+                  print(f"  {name}: {value}")
+              sys.exit(1)
+
+          print(f"Citation metadata consistent at version {versions['.zenodo.json']}.")
+          PY

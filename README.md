@@ -1,5 +1,11 @@
 # OISST Fourier Neural Operator
 
+[![ci](https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator/actions/workflows/ci.yml/badge.svg)](https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator/actions/workflows/ci.yml)
+[![python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)](https://www.python.org)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![code style: ruff](https://img.shields.io/badge/code%20style-ruff-261230)](https://github.com/astral-sh/ruff)
+[![checked: mypy strict](https://img.shields.io/badge/mypy-strict-2a6db2)](https://mypy-lang.org)
+
 A notebook-first data science project asking a deliberately narrow question:
 
 > **When does a Fourier Neural Operator (FNO) provide forecast information beyond persistence for real sea-surface temperature fields, and at which spatial scales does that gain occur?**
@@ -144,6 +150,13 @@ poetry run jupyter lab
 
 Run notebooks in numeric order.
 
+Contributors should also install the git hooks, which strip notebook outputs and run
+ruff and mypy before each commit:
+
+```bash
+poetry run pre-commit install
+```
+
 ## Data source
 
 Official NOAA resources:
@@ -189,10 +202,32 @@ See:
 ## Quality checks
 
 ```bash
+make quality
+```
+
+which runs the same checks as CI:
+
+```bash
 poetry run ruff check src tests
+poetry run ruff format --check src tests
 poetry run mypy src
 poetry run pytest
 ```
+
+CI additionally verifies that notebooks carry no stored outputs and that the citation
+metadata stays valid and version-consistent.
+
+## Contributing
+
+Contributions are welcome, including ones that report negative results. Please read
+[`CONTRIBUTING.md`](CONTRIBUTING.md) first — it sets out the development workflow and
+the scientific rules that changes to data handling, baselines, or evaluation must
+respect. Methodological problems such as leakage or a mis-specified baseline should be
+filed with the "Scientific issue" template.
+
+Participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Security
+matters are covered by the [security policy](SECURITY.md); release history is in
+[`CHANGELOG.md`](CHANGELOG.md).
 
 ## Citation and archiving
 

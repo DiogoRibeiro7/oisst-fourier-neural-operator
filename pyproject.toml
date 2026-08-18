@@ -1,24 +1,54 @@
-[tool.poetry]
+[project]
 name = "oisst-fourier-neural-operator"
 version = "0.1.0"
 description = "Notebook-first Fourier Neural Operator study for real NOAA OISST forecasting"
-authors = ["Diogo Ribeiro"]
 readme = "README.md"
-packages = [{ include = "oisst_fno", from = "src" }]
+requires-python = ">=3.11,<3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Diogo Ribeiro" }]
+keywords = [
+  "fourier-neural-operator",
+  "neural-operator",
+  "sea-surface-temperature",
+  "oisst",
+  "ocean-forecasting",
+  "spectral-analysis",
+  "scientific-machine-learning",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Atmospheric Science",
+  "Typing :: Typed",
+]
+dependencies = [
+  "numpy>=2.0,<3.0",
+  "pandas>=2.2,<3.0",
+  "xarray>=2024.6",
+  "netcdf4>=1.7",
+  "requests>=2.32",
+  "scipy>=1.14",
+  "scikit-learn>=1.5",
+  "matplotlib>=3.9",
+  "torch>=2.3,<3.0",
+  "tqdm>=4.66",
+  "pyyaml>=6.0",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.11,<3.13"
-numpy = ">=2.0,<3.0"
-pandas = ">=2.2,<3.0"
-xarray = ">=2024.6"
-netcdf4 = ">=1.7"
-requests = ">=2.32"
-scipy = ">=1.14"
-scikit-learn = ">=1.5"
-matplotlib = ">=3.9"
-torch = ">=2.3,<3.0"
-tqdm = ">=4.66"
-pyyaml = ">=6.0"
+[project.urls]
+Homepage = "https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator"
+Repository = "https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator"
+Issues = "https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator/issues"
+Changelog = "https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator/blob/main/CHANGELOG.md"
+
+[tool.poetry]
+packages = [{ include = "oisst_fno", from = "src" }]
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.2"
@@ -31,7 +61,7 @@ nbformat = ">=5.10"
 types-requests = ">=2.32"
 
 [build-system]
-requires = ["poetry-core>=1.9.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]

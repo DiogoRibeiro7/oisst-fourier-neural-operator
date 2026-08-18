@@ -173,6 +173,7 @@ The code uses ERDDAP dataset identifier `ncdc_oisst_v2_avhrr_by_time_zlev_lat_lo
 This is intentionally not a large application framework. The scientific narrative belongs in notebooks. `src/oisst_fno/` contains only components that are reused or need unit tests:
 
 - data acquisition and temporal-window utilities;
+- download provenance manifests and structural dataset validation;
 - strong reusable baselines;
 - the FNO implementation;
 - forecast and scale-aware metrics.

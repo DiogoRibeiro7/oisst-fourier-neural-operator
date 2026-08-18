@@ -76,6 +76,50 @@ The Northeast Atlantic is one region. Results may not transfer to:
 - coastal domains;
 - other SST analysis/reanalysis products.
 
+## Acquisition provenance and validation
+
+Every download through `oisst_fno.data.download_subset` writes a sidecar manifest,
+`<file>.nc.manifest.json`, so a processed dataset can always be traced to the exact
+source that produced it:
+
+| Field | Purpose |
+|---|---|
+| `source_url` | The full ERDDAP request, including dates, bounds, and variables |
+| `downloaded_at` | UTC timestamp of the download |
+| `start_date`, `end_date`, `variables` | What was requested |
+| `lat_min`/`lat_max`, `lon_min`/`lon_max` | Spatial bounds, on NOAA's [0, 360) convention |
+| `file_bytes`, `sha256` | Detects later truncation or modification |
+| `dataset_id`, `dataset_doi`, `product_version` | Which NOAA product version this is |
+| `smoke_test` | Whether this is a short pipeline-check download rather than study data |
+
+`open_oisst` verifies the manifest before opening, so a corrupted file raises rather than
+being silently analysed.
+
+The following dataset properties were verified against the live NCEI ERDDAP metadata and
+are encoded as constants in `oisst_fno`:
+
+- product version `Version v02r01`, NOAA Level 4;
+- variables `sst`, `anom`, `err`, `ice`; `sst` in degrees Celsius;
+- stored `valid_min`/`valid_max` of -300/4500 in hundredths of a degree, that is -3 to
+  45 °C;
+- 0.25-degree grid spacing in both latitude and longitude;
+- longitude on [0, 360), latitude within -89.875 to 89.875.
+
+`oisst_fno.validation.validate_oisst_dataset` checks a downloaded subset against those
+properties: coordinate presence and dimension order, strictly increasing coordinates,
+0.25-degree spacing, daily continuity, duplicated timestamps, values inside the published
+range, and land-mask stability over time.
+
+Failures are reported, never repaired. A land mask that changes between time steps, for
+example, would silently alter which cells the masked metrics average over, so it is
+raised as an error rather than filled in.
+
+Downloads are written to a `.part` file and moved into place only after the body is
+complete, the declared `Content-Length` matches, and the payload really is NetCDF —
+ERDDAP reports failures as HTML, which would otherwise be saved with a `.nc` extension.
+Transient failures are retried with bounded exponential backoff; client errors such as an
+out-of-range date fail immediately.
+
 ## Leakage policy
 
 - Chronological split only.

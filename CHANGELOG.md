@@ -13,6 +13,18 @@ figure, or conclusion says so explicitly under "Results".
 
 ### Added
 
+- Reproducible and auditable FNO training (prompt `02`): `oisst_fno.experiment` provides
+  seeding across Python/NumPy/PyTorch with opt-in deterministic kernels, environment
+  capture (package versions, git commit and dirty state, torch/CUDA/GPU), an
+  `ExperimentConfig` recording everything needed to reconstruct a run, structured
+  `TrainingHistory` with per-epoch loss, learning rate, wall-clock time, gradient norm and
+  peak GPU memory, gradient-norm computation, and learning-curve diagnosis
+  (converged / underfit / overfit / unstable).
+- Mixed precision on CUDA in notebook `07`, with the CPU path left in full precision.
+  Gradients are unscaled before clipping so the recorded norm is in real units.
+- Remaining GPU nondeterminism is documented in `GPU_NONDETERMINISM_NOTES`, printed by
+  notebook `07` and explained in the model card.
+
 - Hardened OISST acquisition (prompt `01`): bounded retries with exponential backoff on
   transient failures, atomic writes so a partial download is never mistaken for complete
   data, `Content-Length` and NetCDF-payload verification, and an optional smoke-test mode.
@@ -61,6 +73,14 @@ First public release.
 - CI enforces `ruff format --check`, caches the Poetry environment, cancels superseded
   runs, and runs on `actions/checkout@v7` and `actions/setup-python@v7`.
 - Notebooks carry the cell ids their declared nbformat 4.5 requires.
+
+### Changed
+
+- Notebook `07` saves only the best-validation checkpoint plus structured history and
+  configuration, and plots learning curves alongside a gradient-norm trace with an
+  explicit fit diagnosis. Notebook `06` seeds its probes, asserts CPU determinism, and
+  tabulates parameter count against the `width` and `modes` knobs that notebook `10`
+  ablates.
 
 ### Fixed
 

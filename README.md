@@ -174,6 +174,7 @@ This is intentionally not a large application framework. The scientific narrativ
 
 - data acquisition and temporal-window utilities;
 - download provenance manifests and structural dataset validation;
+- experiment configuration, environment capture, and training history;
 - strong reusable baselines;
 - the FNO implementation;
 - forecast and scale-aware metrics.

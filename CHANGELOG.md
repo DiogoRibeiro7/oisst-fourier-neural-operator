@@ -11,7 +11,11 @@ figure, or conclusion says so explicitly under "Results".
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- DOI badge and citation snippet in the README, and the concept and version DOIs
+  recorded in `CITATION.cff` and `docs/ZENODO_RELEASE.md`, following the Zenodo deposit
+  of v0.1.0.
 
 ## [0.1.0] - 2026-08-18
 

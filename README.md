@@ -1,6 +1,7 @@
 # OISST Fourier Neural Operator
 
 [![ci](https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator/actions/workflows/ci.yml/badge.svg)](https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21995656.svg)](https://doi.org/10.5281/zenodo.21995656)
 [![python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)](https://www.python.org)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![code style: ruff](https://img.shields.io/badge/code%20style-ruff-261230)](https://github.com/astral-sh/ruff)
@@ -235,13 +236,21 @@ Citation metadata lives in [`CITATION.cff`](CITATION.cff) (GitHub's "Cite this
 repository" button, BibTeX/APA export) and [`.zenodo.json`](.zenodo.json) (deposition
 metadata used when a tagged release is archived on Zenodo).
 
-Releases are archived by enabling the Zenodo GitHub integration and publishing a tagged
-release; Zenodo then mints a concept DOI for the project and a version DOI per release.
-After the first deposit, add the badge to the top of this file:
+Releases are archived on Zenodo through the GitHub integration. Two DOIs exist:
 
-```markdown
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
-```
+| DOI | Resolves to |
+|---|---|
+| [`10.5281/zenodo.21995656`](https://doi.org/10.5281/zenodo.21995656) | **Concept DOI** — always the latest version. Use this to cite the project. |
+| [`10.5281/zenodo.21995657`](https://doi.org/10.5281/zenodo.21995657) | **Version DOI** — pinned to v0.1.0. Use this when reproducing a specific result. |
+
+To cite this software:
+
+> Ribeiro, D. (2026). *OISST Fourier Neural Operator: scale-resolved evaluation of FNO
+> forecast skill against persistence* (Version 0.1.0) [Computer software].
+> https://doi.org/10.5281/zenodo.21995656
+
+Cite the OISST dataset separately — [10.25921/RE9P-PT57](https://doi.org/10.25921/RE9P-PT57)
+— since NOAA's attribution requirements travel with the data.
 
 The archive is a source snapshot: OISST data, model checkpoints, metrics, and figures
 are gitignored and are not included. Reproduction re-downloads OISST v2.1 from NOAA

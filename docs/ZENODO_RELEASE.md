@@ -35,6 +35,16 @@ link to the release automatically.
 
 One field remains open: **co-authors**, if any, listed in the same order in both files.
 
+## Current DOIs
+
+| DOI | Resolves to |
+|---|---|
+| `10.5281/zenodo.21995656` | Concept DOI — latest version |
+| `10.5281/zenodo.21995657` | Version DOI — v0.1.0 |
+
+The Zenodo record is at <https://doi.org/10.5281/zenodo.21995657>. Zenodo normalises the `.zenodo.json`
+license id `mit` to its internal `mit-license`; this is expected and resolves to MIT.
+
 ## Archiving a release
 
 1. Sign in to [zenodo.org](https://zenodo.org) with the GitHub account that owns the

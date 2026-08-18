@@ -5,6 +5,14 @@ type: software
 version: 0.1.0
 date-released: 2026-08-18
 license: MIT
+doi: 10.5281/zenodo.21995656
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21995656
+    description: Concept DOI resolving to the latest version
+  - type: doi
+    value: 10.5281/zenodo.21995657
+    description: Version DOI for release v0.1.0
 repository-code: "https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator"
 url: "https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator"
 authors:

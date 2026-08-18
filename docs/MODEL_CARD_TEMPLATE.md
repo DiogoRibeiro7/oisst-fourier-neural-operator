@@ -26,6 +26,31 @@ Document tensor shapes, normalization, coordinate channels, lookback, forecast h
 
 Record width, number of Fourier modes, depth, padding, parameter count, optimizer, scheduler, seed, and tuning budget.
 
+Most of this is written automatically by notebook `07` and should be copied from the
+artifacts rather than retyped:
+
+- `artifacts/metrics/fno_experiment.json` — the full `ExperimentConfig` (data dates,
+  region, lookback, horizon, scaler, model shape, optimizer, learning rate, weight decay,
+  batch size, epochs, early-stopping rule, seed) plus the environment it ran in: Python
+  and package versions, platform, git commit and whether the tree was dirty, torch and
+  CUDA versions, and the GPU model.
+- `artifacts/metrics/fno_training_history.json` — per-epoch train and validation loss,
+  learning rate, wall-clock seconds, gradient norm, and peak GPU memory.
+- `artifacts/models/fno_best.pt` — the best-validation checkpoint, not the last epoch.
+
+State the learning-curve verdict (`converged`, `underfit`, `overfit`, or `unstable`) that
+notebook `07` reports, and do not present results from an unstable run.
+
+### Reproducibility caveat
+
+Seeding fixes Python, NumPy, and PyTorch, and makes CPU runs reproducible. It does **not**
+guarantee bitwise-identical GPU results: cuDNN algorithm selection, atomic float
+accumulation, cuFFT planning, mixed precision, and driver or hardware differences all
+introduce variation. `oisst_fno.experiment.GPU_NONDETERMINISM_NOTES` lists these and
+notebook `07` prints them on every CUDA run. Two runs of the same configuration should
+therefore be *statistically consistent*, not identical, and any claimed difference between
+configurations must be larger than that run-to-run spread.
+
 ## Baselines
 
 At minimum report on identical forecast cases:

@@ -5,6 +5,8 @@ type: software
 version: 0.1.0
 date-released: 2026-08-18
 license: MIT
+repository-code: "https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator"
+url: "https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator"
 authors:
   - family-names: Ribeiro
     given-names: Diogo

@@ -28,13 +28,12 @@ Author identity is recorded in both files and does not need changing:
 `CITATION.cff` carries the same values, with the ORCID as a full `https://orcid.org/...`
 URI because CFF 1.2.0 requires that form; `.zenodo.json` takes the bare identifier.
 
-Two fields remain open:
+`CITATION.cff` also records `repository-code` and `url` pointing at
+<https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator>. `.zenodo.json` does
+not need the repository URL: Zenodo's GitHub integration attaches the `isSupplementTo`
+link to the release automatically.
 
-1. **Repository URL.** Once the project has a remote, add `repository-code:` to
-   `CITATION.cff`. Zenodo's GitHub integration adds the `isSupplementTo` link to the
-   release itself automatically, so `.zenodo.json` does not need it.
-
-2. **Co-authors**, if any, in the same order in both files.
+One field remains open: **co-authors**, if any, listed in the same order in both files.
 
 ## Archiving a release
 

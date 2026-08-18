@@ -32,6 +32,33 @@ The current implementation was therefore rewritten. In particular it:
 - uses project-specific `OperatorBlock2d`, encoder/decoder naming, normalization, and coordinate encoding;
 - keeps the real-data SST forecasting workflow independent of the PDE examples used in the original FNO repositories.
 
+## Spatiotemporal (3-D) operator
+
+`src/oisst_fno/model3d.py` adds a space-time Fourier operator for the architecture
+comparison in notebook `14`. It is **not** a novel formulation: 3-D FNOs appear in Li et
+al. (2021) itself, where time is one of the transformed dimensions, and in subsequent
+spatiotemporal neural-operator work.
+
+The implementation follows the same conventions this repository already applies to the
+2-D layer, and for the same reason — to keep the code independently written rather than
+transcribed:
+
+- the project-specific class name `TruncatedFourierMix3d`;
+- complex kernels stored as real components with an explicit trailing real/imaginary axis;
+- `[out_channels, in_channels, ...]` kernel ordering rather than the common teaching
+  layout;
+- `torch.view_as_complex` at execution time;
+- an explicit four-band loop over the retained corner blocks, rather than four unrolled
+  assignment statements;
+- project-specific `OperatorBlock3d`, encoder/decoder naming, normalization, and
+  coordinate encoding;
+- padding along time as well as space, motivated by the non-periodic 14-day window.
+
+The variance-scaled initialisation differs from the 2-D layer's Xavier initialisation
+because the retained-mode count is far larger in three dimensions.
+
+`FNO2d` is unchanged. The comparison requires the baseline to stay fixed.
+
 ## Attribution policy
 
 When publishing or discussing this repository:

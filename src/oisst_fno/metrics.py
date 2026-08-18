@@ -189,6 +189,84 @@ def spectral_error_energy_by_band(
     return band_energy
 
 
+def temporal_increment_correlation(
+    prediction: FloatArray,
+    target: FloatArray,
+    mask: FloatArray | None = None,
+) -> float:
+    """Correlation between predicted and observed day-to-day changes.
+
+    Pointwise error says whether a forecast sequence is close to the truth. This says
+    whether it *moves* like the truth. A forecast can have low RMSE while being nearly
+    constant in time — a plausible failure mode for a model that predicts a smoothed
+    climatology — and that shows up here as a low increment correlation even when RMSE
+    looks acceptable.
+
+    Both arrays are ``[lead, height, width]``; at least two lead times are required.
+    """
+    if prediction.shape != target.shape:
+        raise ValueError("prediction and target must have the same shape.")
+    if prediction.ndim != 3:
+        raise ValueError("expected [lead, height, width] arrays.")
+    if prediction.shape[0] < 2:
+        raise ValueError("At least two lead times are required to form increments.")
+
+    predicted_change = np.diff(prediction, axis=0)
+    observed_change = np.diff(target, axis=0)
+
+    if mask is not None:
+        keep = np.broadcast_to(np.asarray(mask, dtype=bool), predicted_change.shape)
+    else:
+        keep = np.ones_like(predicted_change, dtype=bool)
+    keep = keep & np.isfinite(predicted_change) & np.isfinite(observed_change)
+    if not keep.any():
+        raise ValueError("No valid cells remain after masking.")
+
+    a = predicted_change[keep]
+    b = observed_change[keep]
+    a_centred = a - a.mean()
+    b_centred = b - b.mean()
+    denominator = float(np.sqrt((a_centred**2).sum() * (b_centred**2).sum()))
+    if denominator == 0.0:
+        return 0.0
+    return float((a_centred * b_centred).sum() / denominator)
+
+
+def temporal_variability_ratio(
+    prediction: FloatArray,
+    target: FloatArray,
+    mask: FloatArray | None = None,
+) -> float:
+    """Ratio of predicted to observed day-to-day variability.
+
+    Values below one mean the forecast evolves more slowly than reality — temporal
+    over-smoothing. Above one means it is jumpier. Reported alongside RMSE because
+    minimising squared error rewards smoothing, so a good RMSE and a ratio near 0.3 is a
+    result that needs saying out loud rather than burying.
+    """
+    if prediction.shape != target.shape:
+        raise ValueError("prediction and target must have the same shape.")
+    if prediction.ndim != 3:
+        raise ValueError("expected [lead, height, width] arrays.")
+    if prediction.shape[0] < 2:
+        raise ValueError("At least two lead times are required to form increments.")
+
+    predicted_change = np.diff(prediction, axis=0)
+    observed_change = np.diff(target, axis=0)
+    if mask is not None:
+        keep = np.broadcast_to(np.asarray(mask, dtype=bool), predicted_change.shape)
+    else:
+        keep = np.ones_like(predicted_change, dtype=bool)
+    keep = keep & np.isfinite(predicted_change) & np.isfinite(observed_change)
+    if not keep.any():
+        raise ValueError("No valid cells remain after masking.")
+
+    observed_std = float(np.std(observed_change[keep]))
+    if observed_std == 0.0:
+        raise ValueError("Observed increments have zero variability.")
+    return float(np.std(predicted_change[keep]) / observed_std)
+
+
 def parameter_count(model: torch.nn.Module) -> int:
     """Return the number of trainable model parameters."""
     return sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)

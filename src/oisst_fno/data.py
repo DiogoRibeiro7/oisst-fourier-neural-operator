@@ -6,21 +6,24 @@ and scientific interpretation belong in the notebooks.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Final, Sequence
+from typing import Final
 from urllib.parse import quote
 
 import numpy as np
 import requests
 import torch
 import xarray as xr
+from numpy.typing import NDArray
 from torch import Tensor
 from torch.utils.data import Dataset
 
+FloatArray = NDArray[np.float32]
+
 ERDDAP_BASE: Final[str] = (
-    "https://www.ncei.noaa.gov/erddap/griddap/"
-    "ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon.nc"
+    "https://www.ncei.noaa.gov/erddap/griddap/ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon.nc"
 )
 
 
@@ -72,7 +75,7 @@ class Standardizer:
             raise ValueError("std must be finite and positive.")
 
     @classmethod
-    def fit(cls, values: np.ndarray) -> "Standardizer":
+    def fit(cls, values: np.ndarray) -> Standardizer:
         """Fit a global standardizer while ignoring missing land cells."""
         array = np.asarray(values, dtype=np.float32)
         mean = float(np.nanmean(array))
@@ -186,7 +189,8 @@ def forecast_target_times(
     array = np.asarray(times)
     if array.ndim != 1:
         raise ValueError("times must be one-dimensional.")
-    return array[forecast_target_indices(len(array), spec)]
+    targets: np.ndarray = array[forecast_target_indices(len(array), spec)]
+    return targets
 
 
 def temporal_split(
@@ -224,13 +228,16 @@ class SSTWindowDataset(Dataset[tuple[Tensor, Tensor, Tensor]]):
         if array.shape[0] < minimum:
             raise ValueError(f"Need at least {minimum} time steps, got {array.shape[0]}.")
 
-        self._values = array
+        self._values: FloatArray = array
         self._spec = spec
-        self._mask = np.isfinite(array).any(axis=0).astype(np.float32)
-        self._filled = np.nan_to_num(array, nan=0.0, copy=True)
+        self._mask: FloatArray = np.asarray(np.isfinite(array).any(axis=0), dtype=np.float32)
+        self._filled: FloatArray = np.asarray(
+            np.nan_to_num(array, nan=0.0, copy=True), dtype=np.float32
+        )
 
     def __len__(self) -> int:
-        return self._values.shape[0] - self._spec.lookback_days - self._spec.horizon_days + 1
+        available = int(self._values.shape[0])
+        return available - self._spec.lookback_days - self._spec.horizon_days + 1
 
     def __getitem__(self, index: int) -> tuple[Tensor, Tensor, Tensor]:
         if index < 0 or index >= len(self):

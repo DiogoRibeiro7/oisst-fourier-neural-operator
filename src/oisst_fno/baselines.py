@@ -102,7 +102,7 @@ class EOFRidgeForecaster:
             raise ValueError("Valid ocean cells must be finite for the EOF baseline.")
         return matrix
 
-    def fit(self, values: FloatArray, spec: ForecastSpec) -> "EOFRidgeForecaster":
+    def fit(self, values: FloatArray, spec: ForecastSpec) -> EOFRidgeForecaster:
         """Fit EOFs and ridge dynamics using one chronological training series."""
         array = np.asarray(values, dtype=float)
         if array.ndim != 3:

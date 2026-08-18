@@ -90,12 +90,13 @@ class TruncatedFourierMix2d(nn.Module):
             spectrum[:, :, negative_y, low_x], kernels[1]
         )
 
-        return torch.fft.irfft2(
+        reconstructed: Tensor = torch.fft.irfft2(
             mixed_spectrum,
             s=(height, width),
             dim=(-2, -1),
             norm="ortho",
         )
+        return reconstructed
 
 
 class OperatorBlock2d(nn.Module):
@@ -177,4 +178,5 @@ class FNO2d(nn.Module):
         if self.padding > 0:
             state = state[..., : -self.padding, : -self.padding]
 
-        return self.decoder(state)
+        prediction: Tensor = self.decoder(state)
+        return prediction

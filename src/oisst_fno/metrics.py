@@ -65,7 +65,8 @@ def daily_rmse(
     if np.any(count == 0):
         raise ValueError("Every sample must contain at least one valid cell.")
     squared = np.where(valid, (pred - obs) ** 2, 0.0)
-    return np.sqrt(squared.sum(axis=(1, 2)) / count)
+    rmse: FloatArray = np.sqrt(squared.sum(axis=(1, 2)) / count)
+    return rmse
 
 
 def anomaly_correlation(
@@ -184,7 +185,8 @@ def spectral_error_energy_by_band(
 
     if np.any(counts == 0):
         raise ValueError("At least one spectral band contains no Fourier coefficients.")
-    return accumulated / counts
+    band_energy: FloatArray = accumulated / counts
+    return band_energy
 
 
 def parameter_count(model: torch.nn.Module) -> int:

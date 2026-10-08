@@ -1,0 +1,10 @@
+Tool: built-in image generation
+
+Use case: logo-brand.
+Asset type: square project logo for oisst-fourier-neural-operator.
+Project purpose: Notebook-first Fourier Neural Operator study for real NOAA OISST forecasting
+Design direction: A cyanotype ocean-science emblem: a circular oceanographic plate with deep Prussian-blue water and delicate but clearly legible white wave interference contours. A single broad foam-white wave crosses the circle diagonally, with quiet blue bathymetric texture underneath. White paper background, analog cyanotype edges, ocean atlas feeling. No globe grid or metallic objects.
+Composition: one finished square image, visually distinctive and readable at 160 pixels, with enough margin for README display. Produce the actual artwork, not a mockup sheet or brand presentation. No watermark. Do not use a navy-and-gold metallic badge aesthetic.
+
+Final revision:
+Use case: precise-object-edit. Edit the attached cyanotype ocean project emblem. Remove ALL lettering and the short straight horizontal divider line from the lower part of the blue circle. Fill those areas naturally with the same Prussian-blue ocean texture and delicate white interference contours. Preserve the diagonal foam-white wave, circular cyanotype shape, white paper background, composition, palette, and texture. No words, letters, numbers, slogans, or watermark anywhere. The output is the same square artwork with only the unwanted typography removed.

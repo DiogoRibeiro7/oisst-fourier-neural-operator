@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/project-avatar.png" alt="oisst-fourier-neural-operator project logo" width="160" height="160">
+</p>
+
 # OISST Fourier Neural Operator
 
 [![ci](https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator/actions/workflows/ci.yml/badge.svg)](https://github.com/DiogoRibeiro7/oisst-fourier-neural-operator/actions/workflows/ci.yml)
